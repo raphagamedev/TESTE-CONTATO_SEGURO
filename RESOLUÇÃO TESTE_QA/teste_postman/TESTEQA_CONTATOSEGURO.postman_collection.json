@@ -1,0 +1,704 @@
+{
+	"info": {
+		"_postman_id": "13fc80a9-85db-41fc-8d59-6fa7eadef93c",
+		"name": "TESTEQA_CONTATOSEGURO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32870656"
+	},
+	"item": [
+		{
+			"name": "Home Route",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verificar se o status da resposta é 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Verificar se a resposta contém o home esperado\r",
+							"pm.test(\"Response should contain 'home'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.msg).to.eql(\"home\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name has string\", function () {\r",
+							"    console.log(pm.response);\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5400",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5400"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verificar se o status da resposta é 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    //console.log(pm.response);\r",
+							"});\r",
+							"\r",
+							"// Verificar se a resposta contém uma lista de usuários\r",
+							"pm.test(\"Response should be a list of users\", function () {\r",
+							"    \r",
+							"    var jsonData = pm.response.json();\r",
+							"    //console.log(pm.response);\r",
+							"    pm.expect(jsonData).to.be.an('array');\r",
+							"    \r",
+							"    pm.expect(jsonData.length).to.be.greaterThan(0); // Verifica se a lista não está vazia\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8400/api/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Teste para verificar o código de status\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar se o tipo de conteúdo é JSON\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar o formato da resposta com base no código de status\r",
+							"pm.test(\"Response should contain user data when status is 200\", function () {\r",
+							"    if (pm.response.code === 200) {\r",
+							"        var jsonData = pm.response.json();\r",
+							"        // Log para depuração\r",
+							"        console.log(\"User Data:\", jsonData);\r",
+							"\r",
+							"        // Verificar se a resposta contém as propriedades esperadas\r",
+							"        pm.expect(jsonData).to.have.property('id');\r",
+							"        pm.expect(jsonData).to.have.property('name');\r",
+							"        pm.expect(jsonData).to.have.property('email'); // Adicione mais propriedades conforme necessário\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar se a resposta é adequada para um código 400\r",
+							"pm.test(\"Response should be a bad request when status is 400\", function () {\r",
+							"    if (pm.response.code === 400) {\r",
+							"        var responseText = pm.response.text();\r",
+							"        // Log para depuração\r",
+							"        console.log(\"Bad Request Response:\", responseText);\r",
+							"\r",
+							"        // Verificar se a resposta contém uma mensagem de erro adequada\r",
+							"        pm.expect(responseText).to.include(\"Bad Request\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar se a resposta é adequada para um código 500\r",
+							"pm.test(\"Response should be an internal server error when status is 500\", function () {\r",
+							"    if (pm.response.code === 500) {\r",
+							"        var responseText = pm.response.text();\r",
+							"        // Log para depuração\r",
+							"        console.log(\"Internal Server Error Response:\", responseText);\r",
+							"\r",
+							"        // Verificar se a resposta contém uma mensagem de erro adequada\r",
+							"        pm.expect(responseText).to.include(\"Internal Server Error\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8400/api/user/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"user",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Teste de status code 201\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"// Teste de status code 400\r",
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"// Teste de status code 500\r",
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar se o Content-Type é JSON\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"// Teste para verificar se a resposta contém os dados do usuário (apenas para status 201)\r",
+							"if (pm.response.code === 201) {\r",
+							"    pm.test(\"Response contains user data\", function () {\r",
+							"        var jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData).to.have.property(\"name\", \"TESTE API4\");\r",
+							"        pm.expect(jsonData).to.have.property(\"email\", \"API@GMAIL\");\r",
+							"        pm.expect(jsonData).to.have.property(\"telephone\", \"999999999\");\r",
+							"        pm.expect(jsonData).to.have.property(\"birth_date\", \"2000-02-01\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"// Teste para verificar se o corpo da resposta está vazio para 400 e 500\r",
+							"if (pm.response.code === 400 || pm.response.code === 500) {\r",
+							"    pm.test(\"Response body should be empty or contain an error message\", function () {\r",
+							"        var jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData).to.be.oneOf([null, {}, { message: \"invalid data!\" }]);\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//PAYLOAD\r\n{\r\n  \"name\": \"TESTE API4\",\r\n  \"email\": \"API@GMAIL\",\r\n  \"telephone\": \"999999999\",\r\n  \"birth_date\": \"2024-08-09\",\r\n  \"birth_city\": \"2000-02-01\",\r\n  \"companies\": [\r\n    4\r\n  ]\r\n}\r\n//PREVIEW\r\n\r\n//RESPONSE\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8400/api/user/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is JSON\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains user data\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"name\", \"Raphael Camara Pinto da API\");\r",
+							"    pm.expect(jsonData).to.have.property(\"email\", \"raphaelgamedevrj@gmail.com\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response code is 400 for bad request\", function () {\r",
+							"    if (pm.response.code === 400) {\r",
+							"        pm.expect(pm.response.text()).to.include(\"Bad request\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response code is 500 for internal server error\", function () {\r",
+							"    if (pm.response.code === 500) {\r",
+							"        pm.expect(pm.response.text()).to.include(\"Internal server error\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Raphael Camara Pinto da API\",\r\n  \"email\": \"raphaelgamedevrj@gmail.com\",\r\n  \"telephone\": \"999999999\",\r\n  \"birth_date\": \"2024-08-09\",\r\n  \"birth_city\": \"2000-02-01\",\r\n  \"companies\": [\r\n    4\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8400/api/user/{{id}}/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"user",
+						"{{id}}",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is valid\", function () {\r",
+							"    pm.response.to.have.status(pm.response.code);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is as expected\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    if (pm.response.code === 200) {\r",
+							"        // Teste para o código 200\r",
+							"        pm.expect(jsonData).to.have.property(\"message\");\r",
+							"        pm.expect(jsonData.message).to.eql(\"User deleted successfully.\");\r",
+							"    } else if (pm.response.code === 400) {\r",
+							"        // Teste para o código 400\r",
+							"        pm.expect(jsonData).to.have.property(\"error\");\r",
+							"        pm.expect(jsonData.error).to.be.a('string');\r",
+							"    } else if (pm.response.code === 500) {\r",
+							"        // Teste para o código 500\r",
+							"        pm.expect(jsonData).to.have.property(\"error\");\r",
+							"        pm.expect(jsonData.error).to.be.a('string');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8400/api/user/{{id}}/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"user",
+						"{{id}}",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Company",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is valid\", function () {\r",
+							"    pm.response.to.have.status(pm.response.code);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is as expected\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    if (pm.response.code === 200) {\r",
+							"        // Teste para o código 200\r",
+							"        pm.expect(jsonData).to.have.property(\"message\");\r",
+							"        pm.expect(jsonData.message).to.eql(\"User deleted successfully.\");\r",
+							"    } else if (pm.response.code === 400) {\r",
+							"        // Teste para o código 400\r",
+							"        pm.expect(jsonData).to.have.property(\"error\");\r",
+							"        pm.expect(jsonData.error).to.be.a('string');\r",
+							"    } else if (pm.response.code === 500) {\r",
+							"        // Teste para o código 500\r",
+							"        pm.expect(jsonData).to.have.property(\"error\");\r",
+							"        pm.expect(jsonData.error).to.be.a('string');\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8400/api/company/{{idcompanyup}}/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"company",
+						"{{idcompanyup}}",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Companies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verificar se o status da resposta é 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    //console.log(pm.response);\r",
+							"});\r",
+							"\r",
+							"// Verificar se a resposta contém uma lista de usuários\r",
+							"pm.test(\"Response should be a List of companies\", function () {\r",
+							"    \r",
+							"    var jsonData = pm.response.json();\r",
+							"    //console.log(pm.response);\r",
+							"    pm.expect(jsonData).to.be.an('array');\r",
+							"    \r",
+							"    pm.expect(jsonData.length).to.be.greaterThan(0); // Verifica se a lista não está vazia\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8400/api/company",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Company by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Testa se o código de status é 200 e verifica os dados da empresa\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"id_company\");\r",
+							"    pm.expect(jsonData).to.have.property(\"name\");\r",
+							"    pm.expect(jsonData).to.have.property(\"address\");\r",
+							"    // Adicione mais verificações conforme necessário\r",
+							"});\r",
+							"\r",
+							"// Testa se o código de status é 400 e verifica a mensagem de erro\r",
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    if (pm.response.code === 400) {\r",
+							"        const jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData.error).to.eql(\"Bad request\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Testa se o código de status é 500 e verifica a mensagem de erro\r",
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    if (pm.response.code === 500) {\r",
+							"        const jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData.error).to.eql(\"Internal server error\");\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8400/api/company/{{idcompany}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"company",
+						"{{idcompany}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Company",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Testa se o código de status é 201 e verifica os dados da empresa criada\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"id_company\");\r",
+							"    pm.expect(jsonData).to.have.property(\"name\", \"New Company\");\r",
+							"    pm.expect(jsonData).to.have.property(\"cnpj\", \"12345678901234\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"cep\", \"12345678\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"country\", \"Brasil\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"state\", \"SP\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"city\", \"São Paulo\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"street\", \"Rua Nova\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"number\", \"100\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"district\", \"Jardim Exemplo\");\r",
+							"    pm.expect(jsonData.adress).to.have.property(\"additional\", \"Edifício A\");\r",
+							"});\r",
+							"\r",
+							"// Testa se o código de status é 400 e verifica a mensagem de erro\r",
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    if (pm.response.code === 400) {\r",
+							"        const jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData.error).to.eql(\"Bad request\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Testa se o código de status é 500 e verifica a mensagem de erro\r",
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    if (pm.response.code === 500) {\r",
+							"        const jsonData = pm.response.json();\r",
+							"        pm.expect(jsonData.error).to.eql(\"Internal server error\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//DA MENTE\r\n// {\r\n//     \"name\": \"Example Company\",\r\n//     \"cnpj\": \"12.345.678/0001-99\",\r\n//     \"adress\": {\r\n//         \"cep\": \"12345-678\",\r\n//         \"country\": \"Brazil\",\r\n//         \"city\": \"São Paulo\",\r\n//         \"street_location\": \"Avenida Exemplo\",\r\n//         \"number\": \"123\",\r\n//         \"district\": \"Centro\"\r\n//     }\r\n// }\r\n//DO GET\r\n// {\r\n//     \"id_company\": \"1\",\r\n//     \"name\": \"QA Station2\",\r\n//     \"cnpj\": \"991836547193\",\r\n//     \"show\": \"1\",\r\n//     \"id_adress\":\"1\"\r\n//     {\r\n//         \"cep\": \"95500000\",\r\n//         \"country\": \"Brasil\",\r\n//         \"state\": \"RS\",\r\n//         \"city\": \"Porto Alegre\",\r\n//         \"street\": \"Rua General Mostarda\",\r\n//         \"number\": \"919\",\r\n//         \"district\": \"Menino Deus\"\r\n//     }\r\n    \r\n    \r\n// }\r\n\r\n//AJUSTE\r\n\r\n{\r\n    \"name\": \"New Company\",\r\n    \"cnpj\": \"12345678901234\",\r\n    \"adress\": {\r\n        \"cep\": \"12345678\",\r\n        \"country\": \"Brasil\",\r\n        \"state\": \"SP\",\r\n        \"city\": \"São Paulo\",\r\n        \"street\": \"Rua Nova\",\r\n        \"number\": \"100\",\r\n        \"district\": \"Jardim Exemplo\",\r\n        \"additional\": \"Edifício A\"\r\n    }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8400/api/company/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"company",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Company",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// // Testa se o código de status é 200\r",
+							"// pm.test(\"Status code is 200\", function () {\r",
+							"//     pm.response.to.have.status(200);\r",
+							"//     const jsonData = pm.response.json();\r",
+							"//     pm.expect(jsonData).to.have.property(\"name\", \"New Company API\");\r",
+							"// });\r",
+							"\r",
+							"// // Testa se o código de status é 400 e verifica a mensagem de erro\r",
+							"// pm.test(\"Status code is 400\", function () {\r",
+							"//     if (pm.response.code === 400) {\r",
+							"//         const jsonData = pm.response.json();\r",
+							"//         pm.expect(jsonData.error).to.eql(\"Bad request\");\r",
+							"//     }\r",
+							"// });\r",
+							"\r",
+							"// // Testa se o código de status é 500 e verifica a mensagem de erro\r",
+							"// pm.test(\"Status code is 500\", function () {\r",
+							"//     if (pm.response.code === 500) {\r",
+							"//         const jsonData = pm.response.json();\r",
+							"//         pm.expect(jsonData.error).to.eql(\"Internal server error\");\r",
+							"//     }\r",
+							"// });"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"New Company API\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8400/api/company/7/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8400",
+					"path": [
+						"api",
+						"company",
+						"7",
+						"update"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
